@@ -12,6 +12,8 @@ juke.factory('PlayerFactory', function(){
     progress = audio.currentTime / audio.duration;
   })
 
+
+
   return {
   	start: function(song, arr) {
 

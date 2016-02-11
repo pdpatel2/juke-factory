@@ -3,6 +3,8 @@
 juke.controller('AlbumCtrl', function($scope, $http, $rootScope, $log, StatsFactory, PlayerFactory) {
 
   // load our initial data
+  var songs;
+
   $http.get('/api/albums/')
   .then(res => $http.get('/api/albums/' + res.data[1]._id)) // temp: use first
   .then(res => res.data)
@@ -16,6 +18,8 @@ juke.controller('AlbumCtrl', function($scope, $http, $rootScope, $log, StatsFact
     return album;
   })
   .then(function(album) {
+    songs = album.songs;
+
     StatsFactory.totalTime(album)
     .then(function (albumDuration) {
         $scope.fullDuration = albumDuration;
@@ -47,7 +51,7 @@ juke.controller('AlbumCtrl', function($scope, $http, $rootScope, $log, StatsFact
       if(song === PlayerFactory.getCurrentSong()){
         PlayerFactory.resume()  
       }else{
-        PlayerFactory.start(song);
+        PlayerFactory.start(song, songs);
       }
       
     }
@@ -56,11 +60,12 @@ juke.controller('AlbumCtrl', function($scope, $http, $rootScope, $log, StatsFact
     // } else $rootScope.$broadcast('play', song);
   };
 
+
   // incoming events (from Player, toggle, or skip)
   // $scope.$on('pause', pause);
   // $scope.$on('play', play);
-  $scope.$on('next', next);
-  $scope.$on('prev', prev);
+  // $scope.$on('next', next);
+  // $scope.$on('prev', prev);
 
   // functionality
 
@@ -84,8 +89,8 @@ juke.controller('AlbumCtrl', function($scope, $http, $rootScope, $log, StatsFact
     $scope.currentSong = $scope.album.songs[index];
     if ($scope.playing) $rootScope.$broadcast('play', $scope.currentSong);
   };
-  function next () { skip(1); };
-  function prev () { skip(-1); };
+  // function next () { skip(1); };
+  // function prev () { skip(-1); };
 
 });
 

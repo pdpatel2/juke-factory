@@ -3,12 +3,19 @@
 juke.controller('PlayerCtrl', function ($scope, $rootScope, PlayerFactory) {
 
   // initialize audio player (note this kind of DOM stuff is odd for Angular)
-  var audio = document.createElement('audio');
-  audio.addEventListener('ended', $scope.next);
-  audio.addEventListener('timeupdate', function () {
-    $scope.progress = 100 * audio.currentTime / audio.duration;
-    $scope.$digest(); // no Angular-aware code is doing this for us here
-  });
+  
+  $scope.progress = PlayerFactory.getProgress;
+
+  
+
+
+
+  // var audio = document.createElement('audio');
+  // audio.addEventListener('ended', $scope.next);
+  // audio.addEventListener('timeupdate', function () {
+  //   $scope.progress = 100 * audio.currentTime / audio.duration;
+  //   $scope.$digest(); // no Angular-aware code is doing this for us here
+  // });
 
   // state
   $scope.currentSong = PlayerFactory.getCurrentSong;
@@ -54,7 +61,7 @@ juke.controller('PlayerCtrl', function ($scope, $rootScope, PlayerFactory) {
   // }
 
   // outgoing events (to Album… or potentially other characters)
-  $scope.next = function () { pause(); $rootScope.$broadcast('next'); };
-  $scope.prev = function () { pause(); $rootScope.$broadcast('prev'); };
+  $scope.next = function () { PlayerFactory.next(); };
+  $scope.prev = function () { PlayerFactory.previous(); };
 
 });
